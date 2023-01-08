@@ -113,6 +113,7 @@ function bash_macros_list() {
   else
     bash_macros_list_raw | cut -f 2- -d ' '
   fi
+  echo
 }
 
 function bash_macro_move() {
@@ -145,7 +146,6 @@ function bash_macros_init() {
 
 function bash_macros_clear() {
   bash_macros_list "Bash macros to be cleared:"
-  echo
   for macro_num in 1 2 3 4 5 6 7 8 9 ; do
     if ! bash_macro_exists ${macro_num}; then
       continue
@@ -165,8 +165,7 @@ function bash_macros_reload() {
   bash_macros_clear >/dev/null
   # shellcheck disable=SC1090
   source "$(bash_macros_filepath)"
-  bash_macros_list "Bash macros ${task}:"
-  echo
+  bash_macros_list "Bash Macros ${task}:"
   if [ "reloaded" == "${task}" ] ; then
     echo "Macros loaded."
     echo
@@ -232,7 +231,6 @@ function bash_macro_exists() {
 
 function bash_macros_save() {
   bash_macros_list "Saving macros:"
-  echo
   (
     echo '#!/usr/bin/env bash'
     while read -r alias ; do
