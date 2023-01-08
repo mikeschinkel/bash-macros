@@ -7,7 +7,7 @@ Bash Macros is a simple _"macro"_ system for Bash.
 
 ## Usage Examples
 
-With Bash Macros you can capture up to nine (9) commands from `history` into a command-line alias with a name from `m1`to `m9`.
+With Bash Macros you can assign up to nine (9) commands — or capture them from `history` — into a command-line alias with a name from `m1`to `m9`.
 
 For example, the following will assign `git log --oneline -20` to an alias named `m3`:
 
