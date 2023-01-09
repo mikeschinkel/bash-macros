@@ -53,10 +53,10 @@ You must have [Git](https://git-scm.com/) installed and in your `$PATH`.
 From your Bash terminal command line, run this command:
 
 ```
-source <(curl -sL https://raw.githubusercontent.com/mikeschinkel/bash-macros/v1.0.0/install.sh)
+source <(curl -sL https://raw.githubusercontent.com/mikeschinkel/bash-macros/v1.0.1/install.sh)
 ```
 
-Here is a [**link to the installer**](https://raw.githubusercontent.com/mikeschinkel/bash-macros/v1.0.0/install.sh) for your pre-installation inspection.
+Here is a [**link to the installer**](https://raw.githubusercontent.com/mikeschinkel/bash-macros/v1.0.1/install.sh) for your pre-installation inspection.
 
 ## To Uninstall
 
