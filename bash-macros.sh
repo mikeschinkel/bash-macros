@@ -90,7 +90,7 @@ function bash_macro_add() {
     bash_macros_on_error "You must specify either a command or a history number as a 2nd parameter"
   fi
   if [[ "${command}" =~ [0-9]+ ]] ; then
-    command="$(history | grep "^ ${command} " | cut -f 2- -d ' ')"
+    command="$(history | grep "^ ${command} " | cut -f 4- -d ' ')"
   fi
   echo "m${macro_num}=\"${command}\""
   # shellcheck disable=SC2139
