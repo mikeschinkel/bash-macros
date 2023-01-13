@@ -89,7 +89,7 @@ function bash_macro_add() {
   if [ "" == "${command}" ] ; then
     bash_macros_on_error "You must specify either a command or a history number as a 2nd parameter"
   fi
-  if [[ "${command}" =~ [0-9]+ ]] ; then
+  if [[ "${command}" =~ ^[0-9]+$ ]] ; then
     command="$(history | grep "^ ${command} " | cut -f 4- -d ' ')"
   fi
   echo "m${macro_num}=\"${command}\""
@@ -119,6 +119,7 @@ function bash_macros_list() {
 function bash_macro_move() {
   local from="${1:-}"
   local to="${2:-}"
+  local cmd
 
   if [ "" == "${from}" ] ; then
     bash_macros_on_error "You must specify either a macro number from 1 to 9 as a 1st parameter to move from"
@@ -130,11 +131,16 @@ function bash_macro_move() {
     echo "Macro m${from} does not exist thus not moved."
     return
   fi
-
   # shellcheck disable=SC2139
   # shellcheck disable=SC2086
-  alias ${to}="$(alias "m${from}" | cut -f 2 -d "=" | sed "s/^'\(.*\)'$/\1/")"
+  cmd="$(alias "m${from}")"
+  cmd="${cmd:0:$((${#cmd}-1))}"
+  cmd="${cmd:10}"
+  alias m${to}="${cmd}"
   unalias "m${from}"
+  echo
+  echo "Moved '${cmd}' from m${from} to m${to}."
+  echo
 }
 
 function bash_macros_init() {
