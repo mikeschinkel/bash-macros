@@ -34,6 +34,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -->
 
+## [1.0.2] - 2023-01-13
+
+### Fixed
+
+- Fixed bug in bash_macros_add() that failed to add commands that had numbers `[0-9]`.
+- Fixed bug in bash_macros_move() that failed to move commands that had equals `[=]`.
+
 ## [1.0.1] - 2023-01-07
 
 ### Fixed
