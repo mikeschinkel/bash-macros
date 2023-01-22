@@ -9,6 +9,7 @@ alias md="bash_macro_delete"
 alias mm="bash_macro_move"
 alias mc="bash_macros_clear"
 alias mr="bash_macros_reload"
+alias me="bash_macros_edit"
 
 function bash_macros_aliases() {
   echo "ma mh ml ms md mm mc mr"
@@ -21,6 +22,7 @@ function bash_macros_help() {
   echo " - mh — Show (this) Bash Macros help"
   echo " - ml — List macros"
   echo " - mc — Clear macros"
+  echo " - me — Edit macros file and reload"
   echo " - ms — Save macros to ~/$(bash_macros_rel_file)"
   echo " - mr — Reload macros from ~/$(bash_macros_rel_file)"
   echo " - ma — Add macro from history"
@@ -50,7 +52,7 @@ function bash_macros_on_error() {
 
 function bash_macros_wait() {
   echo "Press Ctrl-C to exit..."
-  read -t 10 -n 1
+  read -r -t 10 -n 1
 }
 
 function bash_macros_repo_url() {
@@ -136,6 +138,8 @@ function bash_macro_move() {
   cmd="$(alias "m${from}")"
   cmd="${cmd:0:$((${#cmd}-1))}"
   cmd="${cmd:10}"
+  # shellcheck disable=SC2086
+  # shellcheck disable=SC2139
   alias m${to}="${cmd}"
   unalias "m${from}"
   echo
@@ -248,6 +252,12 @@ function bash_macros_save() {
   ) > "$(bash_macros_filepath)"
   chmod +x "$(bash_macros_filepath)"
   echo "Bash macros saved to ~/$(bash_macros_rel_file)"
+}
+
+function bash_macros_edit() {
+  if vi "$(bash_macros_filepath)" ; then
+    bash_macros_reload
+  fi
 }
 
 bash_macros_reload assigned
