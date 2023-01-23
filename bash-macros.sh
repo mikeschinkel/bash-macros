@@ -10,12 +10,16 @@ alias mm="bash_macro_move"
 alias mc="bash_macros_clear"
 alias mr="bash_macros_reload"
 alias me="bash_macros_edit"
+alias mb="bash_macros_backup"
 
 function bash_macros_aliases() {
   echo "ma mh ml ms md mm mc mr"
 }
 
 function bash_macros_help() {
+  local rel_file
+  rel_file="$(bash_macros_rel_file)"
+
   bash_macros_init
   echo "Bash Macros Help:"
   echo
@@ -23,8 +27,9 @@ function bash_macros_help() {
   echo " - ml — List macros"
   echo " - mc — Clear macros"
   echo " - me — Edit macros file and reload"
-  echo " - ms — Save macros to ~/$(bash_macros_rel_file)"
-  echo " - mr — Reload macros from ~/$(bash_macros_rel_file)"
+  echo " - ms — Save macros to ~/${rel_file}"
+  echo " - mb — Backup macros to ~/${rel_file}.bak"
+  echo " - mr — Reload macros from ~/${rel_file}"
   echo " - ma — Add macro from history"
   echo "        Syntax:  ma <macro#> <command>"
   echo "          Example: ma 3 'git clone $(bash_macros_repo_url)'"
@@ -258,6 +263,16 @@ function bash_macros_edit() {
   if vi "$(bash_macros_filepath)" ; then
     bash_macros_reload
   fi
+}
+
+function bash_macros_backup() {
+  local file
+  local bak
+
+  file="$(bash_macros_filepath)"
+  bak="${file}.bak"
+  cp "${file}" "${bak}"
+  echo "Bash macros backed up to ~/$(bash_macros_rel_file).bak"
 }
 
 bash_macros_reload assigned
