@@ -42,7 +42,7 @@ ml
 
 
 ## Platform
-Bash Macros was developed and tested on vanilla Debian 11 Linux running Bash v5.1.4; it may or may not work on any other environment.
+Bash Macros was developed and tested on vanilla Debian 11 Linux running Bash v5.1.4 and later maintained on macOS 12.7.4 Monterey Bash 3.2.57; it may or may not work on any other environment.
 
 ## Prerequisites
 

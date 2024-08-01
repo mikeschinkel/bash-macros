@@ -11,9 +11,10 @@ alias mc="bash_macros_clear"
 alias mr="bash_macros_reload"
 alias me="bash_macros_edit"
 alias mb="bash_macros_backup"
+alias mz="bash_macros_resource"
 
 function bash_macros_aliases() {
-  echo "ma mh ml ms md mm mc mr"
+  echo "ma mh ml ms md mm mc mr me mb mz"
 }
 
 function bash_macros_help() {
@@ -30,9 +31,11 @@ function bash_macros_help() {
   echo " - ms — Save macros to ~/${rel_file}"
   echo " - mb — Backup macros to ~/${rel_file}.bak"
   echo " - mr — Reload macros from ~/${rel_file}"
-  echo " - ma — Add macro from history"
+  echo " - mz — Re-source Bash Macros"
+  echo " - ma — Add macro from text"
   echo "        Syntax:  ma <macro#> <command>"
-  echo "          Example: ma 3 'git clone $(bash_macros_repo_url)'"
+  echo "          Example: ma 3 git clone $(bash_macros_repo_url)"
+  echo " - ma — Add macro from history"
   echo "        Syntax:  ma <macro#> <history#>"
   echo "          Example: ma 7 531"
   echo " - mm — Move macro"
@@ -64,6 +67,10 @@ function bash_macros_repo_url() {
   echo "https://github.com/mikeschinkel/bash-macros"
 }
 
+function bash_macros_source_filepath() {
+  echo "$(bash_macros_dirpath)/$(bash_macros_source_file)"
+}
+
 function bash_macros_filepath() {
   echo "$(bash_macros_dirpath)/$(bash_macros_file)"
 }
@@ -83,12 +90,23 @@ function bash_macros_rel_file() {
 function bash_macros_file() {
   echo "macros.sh"
 }
+function bash_macros_source_file() {
+  echo "bash-macros.sh"
+}
+
+function bash_macros_resource() {
+  bash_macros_save > /dev/null
+  # shellcheck disable=SC1090
+  source "$(bash_macros_source_filepath)" > /dev/null
+  echo "Bash Macros source reloaded."
+}
 
 # Adds a numbered macro — m1..m9 — from a numbered line in history
 # e.g. mha 3 123 # Adds m3 alias to actual command from history !123
 function bash_macro_add() {
   local macro_num="${1:-}"
-  local command="${2:-}"
+  shift
+  local command="$*"
 
   if [ "" == "${macro_num}" ] ; then
     bash_macros_on_error "You must specify either a macro number from 1 to 9 as a 1st parameter"
@@ -97,7 +115,9 @@ function bash_macro_add() {
     bash_macros_on_error "You must specify either a command or a history number as a 2nd parameter"
   fi
   if [[ "${command}" =~ ^[0-9]+$ ]] ; then
-    command="$(history | grep "^ ${command} " | cut -f 4- -d ' ')"
+    # `fc -l` lists history command <from> and <to>
+    # See https://www.gnu.org/software/bash/manual/html_node/Bash-History-Builtins.html
+    command=$(fc -l "${command}" "${command}" | awk '{{$1=""; sub(/^ /,""); print}}' | xargs)
   fi
   echo "m${macro_num}=\"${command}\""
   # shellcheck disable=SC2139
@@ -174,21 +194,28 @@ function bash_macros_reload() {
   local task="${1:-}"
 
   if [ "" == "${task}" ] ; then
-    task="reloaded"
+    task="load"
   fi
   bash_macros_init
   bash_macros_clear >/dev/null
   # shellcheck disable=SC1090
   source "$(bash_macros_filepath)"
   bash_macros_list "Bash Macros ${task}:"
-  if [ "reloaded" == "${task}" ] ; then
+  if [ "load" == "${task}" ] ; then
     echo "Macros loaded."
     echo
   fi
 }
 
 function bash_macro_delete() {
-  unalias "m$1" 2>/dev/null
+  local a
+  a="$(alias m$1 2>/dev/null)"
+  if [ "${a}}" == "" ] ; then
+    echo "Macro m$1 not found"
+  else
+    echo "$(alias m$1) deleted"
+    unalias "m$1" 2>/dev/null
+  fi
 }
 
 function bash_macros_aliases_clear() {
