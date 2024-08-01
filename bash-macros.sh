@@ -209,11 +209,11 @@ function bash_macros_reload() {
 
 function bash_macro_delete() {
   local a
-  a="$(alias m$1 2>/dev/null)"
-  if [ "${a}}" == "" ] ; then
+  a="$(alias "m$1" 2>/dev/null)"
+  if [ "${a}" == "" ] ; then
     echo "Macro m$1 not found"
   else
-    echo "$(alias m$1) deleted"
+    echo "$(alias "m$1") deleted"
     unalias "m$1" 2>/dev/null
   fi
 }
@@ -303,3 +303,4 @@ function bash_macros_backup() {
 }
 
 bash_macros_reload assigned
+
